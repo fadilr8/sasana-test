@@ -12,6 +12,16 @@
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        <style>
+            .tooltip{
+                visibility: hidden;
+                position: absolute;
+            }
+            .has-tooltip:hover .tooltip {
+                visibility: visible;
+                z-index: 100;
+            }
+        </style>
 
         <!-- Scripts -->
         <script src="{{ asset('js/app.js') }}" defer></script>

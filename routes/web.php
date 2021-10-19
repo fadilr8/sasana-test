@@ -3,6 +3,7 @@
 use Illuminate\Support\Facades\Route;
 
 use App\Http\Controllers\ParticipantController;
+use App\Models\Participant;
 
 /*
 |--------------------------------------------------------------------------
@@ -26,3 +27,27 @@ Route::get('/', function () {
 
 Route::get('participants', ParticipantController::class)->name('participant');
 require __DIR__.'/auth.php';
+
+Route::get('/download/{id}/{type}', function ($id, $type) {
+    $data = Participant::find($id);
+
+        switch ($type) {
+            case 'certificate':
+                $pdf = \PDF::loadView('pdf.certificate', ['data' => $data]);
+                return $pdf->setPaper('a4', 'landscape')->download('certificate-' . \Str::slug($data->full_name) . '.pdf');
+                
+                break;
+                
+            case 'nametag':
+                $pdf = \PDF::loadView('pdf.nametag', ['data' => $data]);
+                return $pdf->setPaper('a4', 'landscape')->download('nametag-' . \Str::slug($data->full_name) . '.pdf');
+                
+                break;
+            
+            default:
+                return;
+                break;
+        }
+
+    return $pdf->download('nametag-' . $data->full_name . '.pdf');
+})->name('print');

@@ -26,7 +26,7 @@ class Participant extends Component
                 break;
 
             case 'delete':
-                $this->confirmVisible = true;
+                $this->modalVisible = true;
                 $this->action = $action;
                 $this->participantId = $id;
                 
@@ -105,9 +105,28 @@ class Participant extends Component
         session()->flash('message', 'Participant was successfully removed!');
     }
 
-    public function test()
+    public function print($action, $id)
     {
-        session()->flash('message', 'Participant was successfully added!');
+        $data = User::find($id);
+
+        switch ($action) {
+            case 'certificate':
+                $pdf = \PDF::loadView('pdf.certificate', ['data' => $data]);
+                return $pdf->download('certificate.pdf');
+                
+                break;
+                
+            case 'nametag':
+                $pdf = \PDF::loadView('pdf.nametag', ['data' => $data]);
+                return $pdf->download('nametag-' . $data->full_name . '.pdf');
+                
+                break;
+            
+            default:
+                return;
+                break;
+        }
+        
     }
 
     public function render()
